@@ -1,9 +1,11 @@
-﻿using ContactManager.Models;
+﻿using ContactManager.App_Start;
+using ContactManager.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
+using System.Net.Http.Formatting;
 using System.Text;
 using System.Web.Http;
 using System.Web.Http.OData;
@@ -48,8 +50,28 @@ namespace ContactManager.Controllers
             }
         }
 
-
-        public Contact Get(int id) => repository.Get(id);
+        [CustomActionFilter]
+        [CustomAuthorize]
+        public HttpResponseMessage Get(int id, string desc = "")
+        {
+            //如果抛出的异常是HttpResponseException类型的话，会直接输出到客户端
+            //throw new Exception("error");
+            var response = new HttpResponseMessage();
+            Contact contact = repository.Get(id);
+            var data = new { contact, desc };
+            if(contact == null)
+            {
+                response.StatusCode = HttpStatusCode.NotFound;
+                response.Content = new StringContent("未找到");
+                //导致直接 输出到客户端，传入了HttpResponseMessage对象
+                throw new HttpResponseException(response);
+            }
+            else
+            {
+                response.Content = new ObjectContent(data.GetType(), data, new JsonMediaTypeFormatter());
+                return response;
+            }
+        }
 
         //  api/contact?$filter=substringof(Address,'桃花岛')
         //  api/contact?$orderby=Address&$top=2&$skip=1

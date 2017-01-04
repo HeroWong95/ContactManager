@@ -1,4 +1,5 @@
-﻿using System;
+﻿using ContactManager.App_Start;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
@@ -12,6 +13,8 @@ namespace ContactManager
         protected void Application_Start()
         {
             GlobalConfiguration.Configure(WebApiConfig.Register);
+            //注册全局异常过滤器
+            GlobalConfiguration.Configuration.Filters.Add(new CustomErrorAttribute());
         }
     }
 }
