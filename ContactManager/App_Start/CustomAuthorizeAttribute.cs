@@ -16,15 +16,23 @@ namespace ContactManager.App_Start
         public override void OnAuthorization(HttpActionContext actionContext)
         {
             var identity = HttpContext.Current.User?.Identity as FormsIdentity;
-            if(identity != null && identity.IsAuthenticated)
+            var response = new HttpResponseMessage(HttpStatusCode.Unauthorized);
+            if(identity == null)
+            {
+                response.Content = new StringContent("请登录");
+                actionContext.Response = response;
+            }
+            else if(!identity.IsAuthenticated)
+            {
+                response.Content = new StringContent("身份验证失败");
+                actionContext.Response = response;
+            }
+            else
             {
                 string[] roles = identity.Ticket.UserData.Split(',');
                 HttpContext.Current.User = new GenericPrincipal(identity, roles);
             }
-            else
-            {
-                base.OnAuthorization(actionContext);
-            }
+            base.OnAuthorization(actionContext);
         }
     }
 }

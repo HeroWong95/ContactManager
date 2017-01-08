@@ -51,7 +51,7 @@ namespace ContactManager.Controllers
         }
 
         [CustomActionFilter]
-        [CustomAuthorize]
+        [CustomAuthorize(Roles ="User,Test")]
         public HttpResponseMessage Get(int id, string desc = "")
         {
             //如果抛出的异常是HttpResponseException类型的话，会直接输出到客户端
