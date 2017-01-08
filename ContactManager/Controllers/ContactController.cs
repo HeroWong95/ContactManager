@@ -13,10 +13,16 @@ using System.Web.Http.OData.Query;
 
 namespace ContactManager.Controllers
 {
+    /// <summary>
+    /// 联系人
+    /// </summary>
     public class ContactController : ApiController
     {
         readonly IContactRepository repository;
 
+        /// <summary>
+        /// 联系人构造器
+        /// </summary>
         public ContactController()
         {
             repository = new ContactRepository();
@@ -26,7 +32,7 @@ namespace ContactManager.Controllers
         /// 添加联系人
         /// </summary>
         /// <param name="contact">联系人对象</param>
-        /// <returns></returns>
+        /// <returns>HttpResponseMessage</returns>
         public HttpResponseMessage Post(Contact contact)
         {
             if(ModelState.IsValid)
@@ -50,6 +56,12 @@ namespace ContactManager.Controllers
             }
         }
 
+        /// <summary>
+        /// 根据id获取联系人
+        /// </summary>
+        /// <param name="id">联系人id</param>
+        /// <param name="desc">测试Action过滤器的参数</param>
+        /// <returns>HttpResponseMessage</returns>
         [CustomActionFilter]
         [CustomAuthorize(Roles ="User,Test")]
         public HttpResponseMessage Get(int id, string desc = "")
@@ -73,16 +85,27 @@ namespace ContactManager.Controllers
             }
         }
 
+        /// <summary>
+        /// 获取多个联系人信息
+        /// </summary>
+        /// <returns>联系人列表</returns>
         //  api/contact?$filter=substringof(Address,'桃花岛')
         //  api/contact?$orderby=Address&$top=2&$skip=1
         //更多查询条件见 https://msdn.microsoft.com/zh-cn/library/hh169248(v=nav.90).aspx
         [EnableQuery(PageSize = 10)]
         public IQueryable<Contact> Get() => repository.Get().AsQueryable();
 
-
+        /// <summary>
+        /// 删除一个联系人
+        /// </summary>
+        /// <param name="id">联系人id</param>
         public void Delete(int id) => repository.Delete(id);
 
 
+        /// <summary>
+        /// 修改联系人
+        /// </summary>
+        /// <param name="contact">联系人对象</param>
         public void Put(Contact contact)
         {
             repository.Update(contact);
