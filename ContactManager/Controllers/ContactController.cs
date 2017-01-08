@@ -21,7 +21,7 @@ namespace ContactManager.Controllers
         readonly IContactRepository repository;
 
         /// <summary>
-        /// 联系人构造器
+        /// 联系人构造函数
         /// </summary>
         public ContactController()
         {
