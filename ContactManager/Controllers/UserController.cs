@@ -10,8 +10,16 @@ using System.Web.Security;
 
 namespace ContactManager.Controllers
 {
+    /// <summary>
+    /// 用户控制器
+    /// </summary>
     public class UserController : ApiController
     {
+        /// <summary>
+        /// 登录
+        /// </summary>
+        /// <param name="user">登录实体对象</param>
+        /// <returns>HttpResponseMessage</returns>
         public HttpResponseMessage Post(UserLogin user)
         {
             if(ModelState.IsValid)
